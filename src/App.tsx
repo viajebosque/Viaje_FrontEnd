@@ -1,25 +1,30 @@
-import { useEffect, useState } from 'react';
-import { apiGet } from './lib/api';
-
-type Health = { status: string; env: string };
+import { Routes, Route, Navigate } from 'react-router-dom';
+import { useAuth } from './auth/AuthContext';
+import AuthPage from './pages/AuthPage';
+import Forest from './pages/Forest';
+import ProtectedRoute from './auth/ProtectedRoute';
 
 export default function App() {
-  const [health, setHealth] = useState<Health | null>(null);
-  const [error, setError] = useState<string | null>(null);
+  const { session, loading } = useAuth();
 
-  useEffect(() => {
-    apiGet<Health>('/health')
-      .then(setHealth)
-      .catch((e) => setError(String(e)));
-  }, []);
+  if (loading) return <div className="auth-loading">Cargando…</div>;
 
   return (
-    <main style={{ fontFamily: 'system-ui', padding: '2rem' }}>
-      <h1>Un Viaje por el Bosque</h1>
-      <p>Frontend Vite + React + TS conectado.</p>
-      <h2>Backend</h2>
-      {health && <pre>{JSON.stringify(health, null, 2)}</pre>}
-      {error && <p style={{ color: 'crimson' }}>Sin backend: {error}</p>}
-    </main>
+    <Routes>
+      {/* Raíz: si ya hay sesión, al bosque; si no, login/registro. */}
+      <Route
+        path="/"
+        element={session ? <Navigate to="/forest" replace /> : <AuthPage />}
+      />
+      <Route
+        path="/forest"
+        element={
+          <ProtectedRoute>
+            <Forest />
+          </ProtectedRoute>
+        }
+      />
+      <Route path="*" element={<Navigate to="/" replace />} />
+    </Routes>
   );
 }
