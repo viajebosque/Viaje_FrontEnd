@@ -7,3 +7,8 @@ npm-debug.log*
 *.log
 .DS_Store
 .vercel
+
+# artefactos emitidos por tsc -b (proyecto composite)
+vite.config.js
+vite.config.d.ts
+*.tsbuildinfo
