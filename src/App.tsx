@@ -2,6 +2,7 @@ import { Routes, Route, Navigate } from 'react-router-dom';
 import { useAuth } from './auth/AuthContext';
 import AuthPage from './pages/AuthPage';
 import Forest from './pages/Forest';
+import MissionPage from './pages/MissionPage';
 import ProtectedRoute from './auth/ProtectedRoute';
 
 export default function App() {
@@ -21,6 +22,14 @@ export default function App() {
         element={
           <ProtectedRoute>
             <Forest />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/mission/:numero"
+        element={
+          <ProtectedRoute>
+            <MissionPage />
           </ProtectedRoute>
         }
       />
